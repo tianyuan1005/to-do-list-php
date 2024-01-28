@@ -25,7 +25,7 @@ Route::get('/', function () {
 });
 
 Route::get('/tasks', function () {
-    return view('index', ['tasks' => Task::latest()->get()]);
+    return view('index', ['tasks' => Task::latest()->paginate()]);
 })->name('tasks.index');
 
 
@@ -71,6 +71,12 @@ Route::get('/tasks/{task}/edit', function (Task $task) {
 Route::get('/tasks/{task}', function (Task $task) {
     return view('show', ['task' => $task]);
 })->name('tasks.show');
+
+Route::put('tasks/{task}/toggle-complete', function (Task $task) {
+    $task->toggleComplete();
+
+    return redirect()->back()->with('success', 'Task updated successfully!');
+})->name('tasks.toggle-complete');
 
 Route::fallback(function () {
     return "error";
